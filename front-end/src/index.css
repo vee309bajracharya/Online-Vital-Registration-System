@@ -1,0 +1,29 @@
+/* Google Fonts - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme{
+  /* custom colors */
+  --color-primary-blue: oklch(0.5924 0.2045 257.7);
+  --color-placeholder-blue: oklch(0.9337 0.031762 260.0297);
+  --color-light-blue: oklch(0.7934 0.106354 254.521);
+  --color-success: oklch(0.8561 0.2347 145.96);
+  --color-pending: oklch(0.903 0.1677 101.8);
+  --color-decline: oklch(0.651 0.2124 24.5);
+  --color-dark: oklch(0.2518 0.0248 277.66);
+  --color-mid-dark: oklch(0.3549 0.0497 272.88);
+  --color-light: oklch(1 0 0);
+  --color-mid-light: oklch(0.9804 0.0025 48.72);
+
+  /* custom font */
+  --font-poppins: "Poppins", sans-serif;
+
+  /* custom responsive */
+  --breakpoint-xs: 12.5rem; /* 200px */
+
+}
+
+/* custom styling */
+.wrapper{
+  @apply max-w-7xl mx-auto my-0 py-12 px-8;
+}
