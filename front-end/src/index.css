@@ -7,6 +7,7 @@
   --color-primary-blue: oklch(0.5924 0.2045 257.7);
   --color-placeholder-blue: oklch(0.9337 0.031762 260.0297);
   --color-light-blue: oklch(0.7934 0.106354 254.521);
+  --color-hover-blue: oklch(0.6355 0.1738 255.76);
   --color-success: oklch(0.8561 0.2347 145.96);
   --color-pending: oklch(0.903 0.1677 101.8);
   --color-decline: oklch(0.651 0.2124 24.5);
@@ -26,4 +27,10 @@
 /* custom styling */
 .wrapper{
   @apply max-w-7xl mx-auto my-0 py-12 px-8;
+}
+.form-placeholder{
+  @apply bg-placeholder-blue rounded-l-sm py-1 px-2 my-3 pl-5;
+}
+.showError{
+  @apply text-red-600 text-sm mt-1 font-poppins;
 }
