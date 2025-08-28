@@ -4,7 +4,6 @@ import authLogo from '../../assets/icons/authLogo.png';
 import { YupValidation } from '../../components/YupValidation';
 import { useFormik } from 'formik';
 import axiosClient from '../../api/axiosClient';
-import { useStateContext } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -20,7 +19,6 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serverErrors, setServerErrors] = useState(false);
-  const { setToken } = useStateContext();
   const navigate = useNavigate();
 
 
@@ -30,19 +28,18 @@ const Signup = () => {
     onSubmit: async (formikValues, { resetForm }) => {
       setServerErrors(false);
       try {
-        const response = await axiosClient.post('/register', {
+        await axiosClient.post('/register', {
           name: formikValues.name,
           email: formikValues.email,
           password: formikValues.password,
           password_confirmation: formikValues.password_confirmation,
         });
-        setToken(response.data.access_token);
-        toast.success("Registration success");
-        navigate('/dashboard');
+        toast.success("Registration success! Please login to continue");
+        navigate('/login'); //redirect to login after register
         resetForm();
       } catch (error) {
         const { response } = error;
-        if (response && response.data.errors) {
+        if (error.response && response.data.errors) {
           setServerErrors(response.data.errors); //server validation errors
         } else {
           setServerErrors({ general: ["Something went wrong. Please try again later."] });
