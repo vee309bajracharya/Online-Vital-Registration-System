@@ -35,7 +35,7 @@ const Signup = () => {
           password_confirmation: formikValues.password_confirmation,
         });
         toast.success("Registration success! Please login to continue");
-        navigate('/login');
+        navigate('/login'); //redirect to login after register
         resetForm();
       } catch (error) {
         const { response } = error;
