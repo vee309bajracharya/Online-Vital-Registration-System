@@ -1,37 +1,30 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useStateContext } from '../../contexts/AuthContext';
-import axiosClient from '../../api/axiosClient';
-import { toast } from 'react-toastify';
+import Footer from '../../components/Footer';
+import Navbar from '../../components/Navbar';
+import RegisterCertificates from './RegisterCertificates';
+import UserDetails from './UserDetails';
+import CertificatesList from './CertificatesList';
 
 const UserDashboard = () => {
-  const navigate = useNavigate();
-  const { setToken } = useStateContext();
-
-  const handleLogout = async () => {
-    try {
-      await axiosClient.post('/logout');
-      setToken(null);
-      toast.success('Logged out successfully');
-      navigate('/login');
-    } catch (error) {
-      console.error("Logout failed:", error);
-      toast.error('Logout Failed');
-    }
-  };
-
-
   return (
-    <section className='wrapper'>
-      <div className='text-center'>
-        <h1 className="text-2xl font-bold mb-4">Welcome to User Dashboard</h1>
-        <button
-          onClick={handleLogout}
-          className="px-6 py-2 bg-primary-blue text-light rounded-lg hover:bg-hover-blue transition-colors cursor-pointer"
-        >
-          Logout
-        </button>
-      </div>
+    <section>
+      {/* Navbar render */}
+      <Navbar/>
+
+      <section className='grid grid-cols-3 gap-5 min-h-vh wrapper'>
+
+        {/* Top-left portion */}
+        <RegisterCertificates className="col-span-1 row-span-1"/>
+
+        {/* Top-right portion */}
+        <UserDetails className="col-span-2 row-span-1"/>
+
+        {/* Bottom portion */}
+        <CertificatesList className="col-span-3 row-span-2"/>
+
+      </section>
+      {/* Footer render */}
+      <Footer/>
     </section>
   )
 }
