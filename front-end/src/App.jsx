@@ -12,9 +12,9 @@ const App = () => {
   const { token } = useStateContext();
   return (
     <section>
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} />
+      <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} />
         <Routes>
-          <Route path="/" element={<Navigate to="/signup" />} />
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={token ? <Navigate to="/dashboard" /> : <Login />} />
           <Route path="/signup" element={token ? <Navigate to="/dashboard" /> : <Signup />} />
 
