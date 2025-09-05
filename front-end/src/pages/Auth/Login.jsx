@@ -1,27 +1,21 @@
 import React, { useState } from 'react'
 import LoginIcon from '../../assets/icons/login-icon.png';
-import { Eye, EyeOff, Mail, Lock, User, UserPen, ShieldUser } from 'lucide-react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, Mail, Lock, User, UserPen, ShieldUser, Loader } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useStateContext } from '../../contexts/AuthContext';
 import axiosClient from '../../api/axiosClient';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import LoginTabs from './LoginTabs';
 
 
 const Login = () => {
-  const [activeRole, setActiveRole] = useState("citizen");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { setToken, setUser } = useStateContext();
-
-  // user types switch
-  const roles = [
-    { id: "citizen", label: "Citizen", icon: User },
-    { id: "officer", label: "Register Officer", icon: UserPen },
-    { id: "admin", label: "Admin", icon: ShieldUser },
-  ];
-
+  const [isLoading, setIsLoading] = useState(false);
+  
   // Validation Schema
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -36,6 +30,7 @@ const Login = () => {
     },
     validationSchema,
     onSubmit: async (formValues, { resetForm }) => {
+      setIsLoading(true);
       try {
         const response = await axiosClient.post('/login', formValues);
         setToken(response.data.access_token);
@@ -50,6 +45,8 @@ const Login = () => {
         } else {
           toast.error("Something went wrong. Please try again later.");
         }
+      } finally {
+        setIsLoading(false);
       }
     }
   });
@@ -59,29 +56,12 @@ const Login = () => {
   return (
     <section className="min-h-dvh flex justify-center items-center flex-col bg-gradient-to-b from-sky-400 via-sky-500 to-blue-900 ">
 
-      {/* Role Tabs */}
-      <section className="flex justify-center gap-3 rounded-lg mb-3 ">
-        {roles.map((role) => (
-          <button
-            key={role.id}
-            onClick={() => setActiveRole(role.id)}
-            className={`
-                flex items-center gap-2 p-3 rounded-md transition-all duration-200
-                ${activeRole === role.id
-                ? "bg-primary-blue text-light font-bold font-poppins cursor-pointer"
-                : "bg-hover-blue text-light font-bold font-poppins cursor-pointer"
-              }
-              `}
-          >
-            <role.icon className="w-7 h-7" />
-            <span className="font-medium">{role.label}</span>
-          </button>
-        ))}
-      </section>
-
+      {/* Roles switch */}
+      <LoginTabs/>
 
       {/* Login Card */}
-      <div className="max-w-md w-full bg-white rounded-2xl">
+      <section className="max-w-md w-full bg-light rounded-2xl">
+
         <div className="w-full rounded-2xl p-9">
           {/* Logo */}
           <div className="flex justify-center mb-3">
@@ -142,7 +122,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-6 -translate-y-1/2 transition-base"
+                className="absolute right-4 top-6 -translate-y-1/2 transition-base cursor-pointer"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -164,9 +144,10 @@ const Login = () => {
             {/* Submit Button */}
             <button
               type="submit"
+              aria-label='Citizen Login Button'
               className="w-full py-3 bg-primary-blue text-light rounded-md font-medium font-poppins cursor-pointer hover:bg-hover-blue transition-all"
             >
-              Submit
+              {isLoading ? <Loader className='animate-spin mx-auto w-6 h-6' /> : "Login"}
             </button>
           </form>
 
@@ -184,7 +165,8 @@ const Login = () => {
           </section>
 
         </div>
-      </div>
+
+      </section>
     </section>
   )
 }

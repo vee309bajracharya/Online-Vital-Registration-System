@@ -3,10 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\OfficerProfile;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', //user based roles
     ];
 
     /**
@@ -45,5 +47,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    //convenience helpers
+    public function isUser(): bool{
+        return strtoupper($this->role) === 'USER';
+    }
+    public function isOfficer(): bool{
+        return strtoupper($this->role) === 'OFFICER';
+    }
+    public function isAdmin(): bool{
+        return strtoupper($this->role) === 'ADMIN';
+    }
+
+    //officer profile relation
+    public function officerProfile(){
+        return $this->hasOne(OfficerProfile::class);
     }
 }
