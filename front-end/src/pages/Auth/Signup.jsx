@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Loader } from 'lucide-react';
 import authLogo from '../../assets/icons/authLogo.png';
 import { YupValidation } from '../../components/YupValidation';
 import { useFormik } from 'formik';
@@ -19,6 +19,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serverErrors, setServerErrors] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
 
@@ -26,6 +27,7 @@ const Signup = () => {
     initialValues: initialValues,
     validationSchema: YupValidation,
     onSubmit: async (formikValues, { resetForm }) => {
+      setIsLoading(true);
       setServerErrors(false);
       try {
         await axiosClient.post('/register', {
@@ -45,6 +47,8 @@ const Signup = () => {
           setServerErrors({ general: ["Something went wrong. Please try again later."] });
           toast.error("Something went wrong. Please try again later.");
         }
+      }finally{
+        setIsLoading(false);
       }
     },
   });
@@ -190,9 +194,11 @@ const Signup = () => {
           {/* Submit Button */}
           <button
             type="submit"
+            aria-label='Citizen Signup Button'
             className="w-full py-3 bg-primary-blue text-light rounded-md font-medium font-poppins cursor-pointer hover:bg-hover-blue transition-all"
+            disabled={isLoading}
           >
-            Submit
+            {isLoading ? <Loader className='animate-spin mx-auto w-6 h-6' /> : "Signup"}
           </button>
         </form>
 

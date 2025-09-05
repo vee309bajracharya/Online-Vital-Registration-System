@@ -7,7 +7,7 @@ import CertificatesList from './CertificatesList';
 
 const UserDashboard = () => {
   return (
-    <section>
+    <>
       {/* Navbar render */}
       <Navbar/>
 
@@ -25,7 +25,7 @@ const UserDashboard = () => {
       </section>
       {/* Footer render */}
       <Footer/>
-    </section>
+    </>
   )
 }
 

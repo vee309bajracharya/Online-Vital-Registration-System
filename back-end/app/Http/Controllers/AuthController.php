@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    //register new user
+    //===citizen auth====
     public function register(Request $request){
 
         //validate the request data
@@ -24,6 +24,7 @@ class AuthController extends Controller
             'name'=> $request->name,
             'email'=> $request->email,
             'password'=> Hash::make($request->password),
+            'role'=> 'USER', //default role
         ]);
 
         // sanctum token generate
@@ -64,6 +65,7 @@ class AuthController extends Controller
             'message' => 'Logged in successfully',
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'user'=>$user,
         ],200); // 200 OK
     }
 
@@ -74,4 +76,78 @@ class AuthController extends Controller
             'message' => 'Logged out successfully'
         ],200); // 200 OK
     }
+
+// ====================================================
+
+    //===officer auth====
+    public function loginOfficer(Request $request)
+    {
+        $request->validate([
+            'login'=> 'required|string', //employee_id or email
+            'password'=> 'required|string',
+        ]);
+
+        //find officer through email or employee_id
+        $user = User::where('email', $request->login)
+                ->orWhereHas('officerProfile', function($query) use ($request) {
+                $query->where('employee_id', $request->login);
+        })->first();
+        
+        if(!$user || $user->role !== 'OFFICER' || !Hash::check($request->password, $user->password)){
+            return response()->json([
+                'message' => 'Invalid officer credentials'
+            ],401); // 401 Unauthorized
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Officer Logged in success',
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user'=> $user,
+        ],200); // 200 OK
+        
+    }
+
+    public function logoutOfficer(Request $request){
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'message'=> 'Officer Logout success'
+        ],200);
+    }
+
+// ====================================================
+
+    //===admin auth====
+    public function loginAdmin(Request $request){
+        $credientals =  $request->validate([
+            'email'=> 'required|string|email',
+            'password'=>'required|string',
+        ]);
+
+        $user = User::where('email', $credientals['email'])->first();
+
+        if(!$user || $user->role !== 'ADMIN' || !Hash::check($credientals['password'], $user->password)){
+            return response()->json([
+                'message'=> 'Invalid admin credentials',
+            ],401);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return response()->json([
+            'message'=> 'Admin login success',
+            'access_token'=> $token,
+            'token_type'=> 'Bearer',
+            'user'=> $user,
+        ],200);
+    }
+
+    public function logoutAdmin(Request $request){
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'message'=> 'Admin Logout success'
+        ],200);
+    }
+
 }
