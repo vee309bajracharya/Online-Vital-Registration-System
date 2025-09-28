@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role', //user based roles
+        'phone_number',
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -63,5 +65,11 @@ class User extends Authenticatable
     //officer profile relation
     public function officerProfile(){
         return $this->hasOne(OfficerProfile::class);
+    }
+
+    // Registrations relation (for birth certificates)
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
     }
 }
