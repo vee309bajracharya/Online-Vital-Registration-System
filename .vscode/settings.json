@@ -1,0 +1,8 @@
+{
+    "postman.settings.dotenv-detection-notification-visibility": false,
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "text": "Generate a concise and clear commit message based on the code changes provided.The commit message should accurately summarize the changes made in the code. Use imperative mood in the subject line (e.g., 'Fix bug', 'Add feature'). Limit the subject line to 50 characters or less. Provide a detailed description in the body if necessary, explaining the what and why of the changes. Avoid using vague terms like 'update' or 'fix' without context.Ensure the commit message is grammatically correct and free of typos."
+        }
+    ]
+}

@@ -19,12 +19,14 @@ class RoleMiddleware
 
         //if no user is authenticated
         if(!$user){
-            return response()->json(['message'=>'Unauthorized'],401);
+            // return response()->json(['message'=>'Unauthorized'],401);
+            abort(401, 'Unauthorized');
         }
 
         //check if user role is in the allowed roles
         if(!in_array($user->role, $roles)){
-            return response()->json(['message'=>'Forbidden - No Permissions'],403);
+            // return response()->json(['message'=>'Forbidden - No Permissions'],403);
+            abort(403, 'Forbidden - No Permissions');
         }
 
         return $next($request);
