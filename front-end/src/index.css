@@ -1,8 +1,8 @@
 /* Google Fonts - Poppins */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
-@theme{
+@theme {
   /* custom colors */
   --color-primary-blue: oklch(0.5924 0.2045 257.7);
   --color-placeholder-blue: oklch(0.9337 0.031762 260.0297);
@@ -23,25 +23,30 @@
 
   /* custom responsive */
   --breakpoint-xs: 12.5rem; /* 200px */
-
 }
 
 /* custom styling */
-.wrapper{
+.wrapper {
   @apply max-w-7xl mx-auto my-0 py-3 px-8;
 }
-.form-placeholder{
+.form-placeholder {
   @apply bg-placeholder-blue rounded-l-sm py-1 px-2 my-3 pl-5;
 }
-.showError{
+.showError {
   @apply text-red-600 text-sm font-poppins;
 }
-.dashboardCard{
+.dashboardCard {
   @apply bg-light rounded-md shadow-lg p-4;
 }
-.certificateFormLabel{
+.certificateFormLabel {
   @apply font-medium font-poppins;
 }
-.certificateFormInput{
+.certificateFormInput {
   @apply w-full px-4 py-3 rounded-lg bg-placeholder-blue outline-0;
+}
+.certificate-prevent-copy {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
