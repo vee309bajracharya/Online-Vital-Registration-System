@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, Loader } from 'lucide-react';
 import authLogo from '../../assets/icons/authLogo.png';
-import { YupValidation } from '../../components/YupValidation';
+import { YupValidation } from '../../components/validations/YupValidation';
 import { useFormik } from 'formik';
 import axiosClient from '../../api/axiosClient';
 import { useNavigate, Link } from 'react-router-dom';

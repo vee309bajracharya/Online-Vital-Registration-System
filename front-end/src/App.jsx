@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Routes, Route, Navigate } from 'react-router-dom'
@@ -11,10 +11,39 @@ import OfficerDashboard from './pages/RegisterOfficer/OfficerDashboard';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import RegisterOfficerLogin from './pages/Auth/RegisterOfficerLogin';
 import AdminLogin from './pages/Auth/AdminLogin';
+import BirthCertificateForm from './pages/User/Certificates/BirthCertificateForm';
+import DeathCertificateForm from './pages/User/Certificates/DeathCertificateForm';
+import MigrationCertificateForm from './pages/User/Certificates/MigrationCertificateForm';
+import axiosClient from './api/axiosClient';
+import Spinner from './components/loaders/Spinner';
 
 
 const App = () => {
-  const { token, user } = useStateContext();
+  const { token, user, setUser, setToken } = useStateContext();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (token && !user?.id) {
+      axiosClient.get('/user/profile')
+        .then(response => {
+          setUser(response.data);
+        })
+        .catch(() => {
+          setToken(null);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, [token, setToken, setUser, user?.id]);
+
+  if (loading) {
+    return (
+      <Spinner />
+    );
+  }
 
   // map roles to user roles dashboards
   const dashboards = {
@@ -45,18 +74,31 @@ const App = () => {
         {/* default route : USER */}
         <Route path="/" element={<Navigate to="/login" />} />
 
-        {/* CITIZEN(USER) auth routes */}
+        {/* auth routes */}
         <Route path="/login" element={token ? getDashboard() : <Login />} />
         <Route path="/signup" element={token ? getDashboard() : <Signup />} />
-
-        {/* OFFICER auth route */}
-        <Route path='/login-officer' element={token ? getDashboard() : <RegisterOfficerLogin/>}/>
-
-        {/* ADMIN auth route */}
-        <Route path='/login-admin' element={token ? getDashboard() : <AdminLogin/>}/>
+        <Route path='/login-officer' element={token ? getDashboard() : <RegisterOfficerLogin />} />
+        <Route path='/login-admin' element={token ? getDashboard() : <AdminLogin />} />
 
         {/* dashboards */}
         <Route path='/dashboard' element={getDashboard()} />
+
+        {/* protected certificate routes */}
+        <Route 
+          path="/birth-certificate/new" 
+          element={token && user?.phone_verified_at 
+          ? <BirthCertificateForm /> : <Navigate to="/dashboard" />} />
+
+        <Route 
+          path="/death-certificate/new" 
+          element={token && user?.phone_verified_at 
+          ? <DeathCertificateForm /> : <Navigate to="/dashboard" />} />
+
+
+        <Route 
+          path="/migration-certificate/new" 
+          element={token && user?.phone_verified_at 
+          ? <MigrationCertificateForm /> : <Navigate to="/dashboard" />} />
 
         {/* unknown route */}
         <Route path='*' element={<PageNotFound />} />
