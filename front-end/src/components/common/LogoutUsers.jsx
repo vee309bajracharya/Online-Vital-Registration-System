@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../contexts/AuthContext';
-import axiosClient from '../api/axiosClient';
+import { useStateContext } from '../../contexts/AuthContext';
+import axiosClient from '../../api/axiosClient';
 import { toast } from 'react-toastify';
 
 const LogoutUsers = () => {

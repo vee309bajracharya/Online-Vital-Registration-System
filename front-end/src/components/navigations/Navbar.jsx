@@ -1,7 +1,6 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
-import Logo from '../assets/svg/logo.svg';
-import LogoutUsers from './LogoutUsers.jsx';
+import Logo from '../../assets/svg/logo.svg';
+import LogoutUsers from '../common/LogoutUsers.jsx';
 
 const Navbar = () => {
 

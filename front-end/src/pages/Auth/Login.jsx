@@ -35,6 +35,8 @@ const Login = () => {
         const response = await axiosClient.post('/login', formValues);
         setToken(response.data.access_token);
         setUser(response.data.user);
+        const profileResponse = await axiosClient.get('/user/profile');
+        setUser(profileResponse.data);
         toast.success("Login successful");
         navigate('/dashboard');
         resetForm();

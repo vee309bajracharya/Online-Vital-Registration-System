@@ -3,8 +3,8 @@ import { createContext, useContext, useState } from "react";
 const StateContext = createContext({
     user: null,
     token: null,
-    setUser: () => { },
-    setToken: () => { },
+    setUser: () => {},
+    setToken: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -21,16 +21,16 @@ export const ContextProvider = ({ children }) => {
     };
 
     return (
-        <StateContext.Provider value={
-            {
-                user,
-                token,
-                setUser,
-                setToken
-            }
-        }>{children}
+        <StateContext.Provider value={{
+            user,
+            setUser,
+            token,
+            setToken,
+        }}>
+            {children}
         </StateContext.Provider>
     );
 };
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const useStateContext = () => useContext(StateContext);

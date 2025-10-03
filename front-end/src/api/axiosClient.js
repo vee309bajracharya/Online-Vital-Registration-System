@@ -21,7 +21,7 @@ axiosClient.interceptors.response.use(
     },
     (error)=>{
         const {response} = error;
-        if(response.status === 401){
+        if(response && response.status === 401){
             // token expired/invalid , remove and redirect to login
             localStorage.removeItem('ACCESS_TOKEN');
         }

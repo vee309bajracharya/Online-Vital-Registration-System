@@ -57,7 +57,7 @@ class BirthDetailController extends Controller
             // child birth details
             'birth_place_en' => 'required|string|max:255',
             'birth_place_np' => 'required|string',
-            'delivery_type' => 'required|string',
+            'delivery_type' => 'required|string|nullable',
 
             // grandparent details
             'grandfather_name_en' => 'required|string|max:255',

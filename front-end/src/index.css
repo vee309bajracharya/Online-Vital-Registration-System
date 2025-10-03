@@ -34,8 +34,14 @@
   @apply bg-placeholder-blue rounded-l-sm py-1 px-2 my-3 pl-5;
 }
 .showError{
-  @apply text-red-600 text-sm mt-1 font-poppins;
+  @apply text-red-600 text-sm font-poppins;
 }
 .dashboardCard{
   @apply bg-light rounded-md shadow-lg p-4;
+}
+.certificateFormLabel{
+  @apply font-medium font-poppins;
+}
+.certificateFormInput{
+  @apply w-full px-4 py-3 rounded-lg bg-placeholder-blue outline-0;
 }
