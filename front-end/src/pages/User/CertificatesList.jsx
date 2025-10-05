@@ -1,122 +1,135 @@
 import { useState, useEffect } from "react"
 import axiosClient from "../../api/axiosClient"
-import { toast } from "react-toastify"
-import { Loader, Eye, X } from "lucide-react"
+import { Loader, X } from "lucide-react"
 import mainLogo from '../../assets/svg/logo.svg'
 
-
 const CertificatesList = ({ className }) => {
-
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCertificate, setSelectedCertificate] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [activeType, setActiveType] = useState("birth");
 
+  // Fetch certificates whenever filter type changes
   useEffect(() => {
-    fetchCertificates();
-  }, []);
+    fetchCertificates(activeType);
+  }, [activeType]);
 
-  //fetch all certificates
-  const fetchCertificates = async () => {
+  // Fetch all certificates based on type
+  const fetchCertificates = async (type = "birth") => {
+    setLoading(true);
     try {
-      const response = await axiosClient.get('/birth-certificates');
+      const endpointMap = {
+        birth: "/birth-certificates",
+        death: "/death-certificates",
+        migration: "/migration-certificates",
+      };
+      const response = await axiosClient.get(endpointMap[type]);
       setCertificates(response.data.data || []);
     } catch (error) {
-      toast.error('Failed to fetch certificates', error);
+      console.log("Failed to fetch certificates", error);
+      setCertificates([]);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  //only specific certificate
+  // Fetch specific certificate only
   const handleView = async (certificateId) => {
     try {
-      const response = await axiosClient.get(`/birth-certificates/${certificateId}`);
+      const endpointMap = {
+        birth: `/birth-certificates/${certificateId}`,
+        death: `/death-certificates/${certificateId}`,
+        migration: `/migration-certificates/${certificateId}`,
+      };
+      const response = await axiosClient.get(endpointMap[activeType]);
       setSelectedCertificate(response.data.data);
       setShowModal(true);
     } catch (error) {
-      toast.error('Failed to fetch certificate details', error);
+      console.log("Failed to fetch certificate details", error);
     }
-  }
+  };
 
-  // certificate status
+  // Status Badge
   const getStatusBadge = (status) => {
     const statusStyles = {
-      PENDING: 'bg-pending text-yellow-800',
-      APPROVED: 'bg-success text-green-800',
-      REJECTED: 'bg-decline text-red-800',
-    }
+      PENDING: "bg-pending text-yellow-800",
+      APPROVED: "bg-success text-green-800",
+      REJECTED: "bg-decline text-red-800",
+    };
     return (
-      <span className={`px-3 py-1 rounded-full text-sm font-semibold font-poppins ${statusStyles[status]}`}>{status}</span>
-    )
-  }
+      <span className={`px-3 py-1 rounded-md text-sm font-semibold font-poppins ${statusStyles[status]}`}>
+        {status}
+      </span>
+    );
+  };
 
   if (loading) {
     return (
       <section className={`${className} flex justify-center items-center min-h-[200px]`}>
         <Loader className="animate-spin" size={30} />
       </section>
-    )
+    );
   }
-
 
   return (
     <>
       <section className={`${className}`}>
-        <h1 className='font-poppins font-semibold text-2xl'>Registered Certificates</h1>
-        <hr className='mt-1 mb-3' />
+        <h1 className="font-poppins font-semibold text-2xl">Registered Certificates</h1>
+        <hr className="mt-1 mb-3" />
 
+        {/* Filter Buttons */}
+        <div className="flex flex-wrap gap-3 mb-6">
+          {["birth", "death", "migration"].map((type) => (
+            <button
+              key={type}
+              onClick={() => setActiveType(type)}
+              className={`px-4 py-2 rounded-full font-poppins text-sm font-medium transition-all duration-300 
+              ${activeType === type
+                  ? "bg-primary-blue text-light shadow-md scale-105 cursor-pointer"
+                  : "bg-card-btn hover:bg-gray-300 text-dark cursor-pointer"
+                }`}
+            >
+              {type.charAt(0).toUpperCase() + type.slice(1)} Certificates
+            </button>
+          ))}
+        </div>
+
+        {/* Certificates Grid */}
         {certificates.length === 0 ? (
-          <div className='text-center py-10'>
-            <p className='font-poppins text-gray-500'>No certificates registered yet</p>
+          <div className="text-center py-10">
+            <p className="font-poppins text-gray-500">No {activeType} certificates registered yet</p>
           </div>
         ) : (
-          <div className='space-y-4'>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-              {certificates.map((cert) => (
-                <div
-                  key={cert.id}
-                  className='relative group overflow-hidden rounded-lg transition-all duration-300 cursor-pointer'
-                  onClick={() => handleView(cert.id)}
-                >
-                  {/* Certificate Preview Background */}
-                  <div className='relative h-52 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center'>
-
-                    {/* Certificate Type */}
-                    <div className='relative z-10 text-center px-6'>
-                      <div className='mb-3'>
-                        <img
-                          src={mainLogo}
-                          alt="Logo"
-                          className='w-16 h-16 mx-auto opacity-80'
-                        />
-                      </div>
-                    </div>
-
-                    {/* Overlay on hover */}
-                    <div className='absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center'>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {certificates.map((cert) => (
+              <div
+                key={cert.id}
+                className="relative group overflow-hidden rounded-lg transition-all duration-300 cursor-pointer"
+                onClick={() => handleView(cert.id)}
+              >
+                <div className="relative h-52 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                  <div className="relative z-10 text-center px-6">
+                    <img src={mainLogo} alt="Logo" className="w-16 h-16 mx-auto opacity-80" />
                   </div>
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center" />
+                </div>
 
-                  {/* Certificate Info Footer */}
-                  <div className='bg-light p-4'>
-                    <div className='flex justify-between items-center'>
-                      <div className='flex-1'>
-                        <p className='text-sm text-gray-600 font-semibold'>
-                          Registration for: {cert.full_name_en}
-                        </p>
-                        <p className='text-xs text-gray-500 mt-1'>
-                          Registered on: {new Date(cert.registrations.submitted_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div>
-                        {getStatusBadge(cert.registrations.status)}
-                      </div>
+                <div className="bg-mid-dark p-4">
+                  <div className="flex justify-between items-center">
+                    <div className="flex-1 space-y-2">
+                      <p className="text-xs text-light font-semibold font-poppins">
+                        Registration No.: {cert.registrations.registration_number}
+                      </p>
+                      <p className="text-xs text-light font-semibold font-poppins">
+                        Registration for: {cert.full_name_en || cert.deceased_name_en || cert.migrator_name_en}
+                      </p>
                     </div>
+                    <div>{getStatusBadge(cert.registrations.status)}</div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         )}
       </section>
@@ -175,7 +188,7 @@ const CertificatesList = ({ className }) => {
               {/* Certificate Number and Date */}
               <div className='flex justify-between mb-6 mt-3 text-sm'>
                 <div>
-                  <p><strong>प्रमाणपत्र नं. / Certificate No.:</strong> {selectedCertificate.registrations.id}</p>
+                  <p><strong>दर्ता नं. / Registration No.:</strong> {selectedCertificate.registrations.registration_number}</p>
                 </div>
                 <div>
                   <p><strong>दर्ता मिति / Registration Date:</strong> {new Date(selectedCertificate.registrations.submitted_at).toLocaleDateString()}</p>
@@ -209,7 +222,7 @@ const CertificatesList = ({ className }) => {
                       <p>{selectedCertificate.birth_details.birth_place_np}</p>
                     </div>
                     <div>
-                      <p className='font-semibold'>Birth Place (English):</p>
+                      <p className='font-semibold'>Birth Place:</p>
                       <p>{selectedCertificate.birth_details.birth_place_en}</p>
                     </div>
                   </div>

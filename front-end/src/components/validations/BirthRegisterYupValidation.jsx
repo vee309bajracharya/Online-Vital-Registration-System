@@ -12,7 +12,6 @@ export const BirthRegisterYupValidation = {
     2: Yup.object({
         birth_place_en: Yup.string().required('Birth place in English is required'),
         birth_place_np: Yup.string().required('Birth place in Nepali is required'),
-        // delivery_type: Yup.string().required('Delivery type is required'),
     }),
 
     3: Yup.object({
