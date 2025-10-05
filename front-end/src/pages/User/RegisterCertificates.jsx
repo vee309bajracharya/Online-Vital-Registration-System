@@ -12,7 +12,7 @@ const RegisterCertificates = ({ className }) => {
   const { user } = useStateContext();
   const navigate = useNavigate();
 
-  const [currentModal, setCurrentModal] = useState(null); // phone, otp, birth-form
+  const [currentModal, setCurrentModal] = useState(null); // phone, otp
   const [selectedCertificate, setSeletedCertificate] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('');
 

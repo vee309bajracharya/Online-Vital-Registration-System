@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('child_id')->constrained('children')->onDelete('cascade');
             $table->string('birth_place_en');
             $table->string('birth_place_np');
-            $table->string('delivery_type')->nullable();
             $table->timestamps();
         });
     }

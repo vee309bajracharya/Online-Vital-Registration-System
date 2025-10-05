@@ -4,8 +4,10 @@ import axiosClient from '../../api/axiosClient'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
+import { useStateContext } from '../../contexts/AuthContext'
 
 const OTPVerify = ({ phoneNumber, onSuccess }) => {
+  const {setUser} = useStateContext();
   const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object({
@@ -25,9 +27,11 @@ const OTPVerify = ({ phoneNumber, onSuccess }) => {
         await axiosClient.post('/phone/otp/verify', {
           phone_number: phoneNumber,
           otp: formValues.otp
-        })
+        });
+        const {data} = await axiosClient.get('/user/profile');
+        setUser(data.user);
         toast.success('Phone verified successfully!')
-        onSuccess()
+        onSuccess?.(data.user);
       } catch (error) {
         const { response } = error
         if (response?.data?.message) {
@@ -88,7 +92,7 @@ const OTPVerify = ({ phoneNumber, onSuccess }) => {
 
         {/* resend otp */}
         <div className='text-right'>
-          Didn't receive the code?
+          Didn't receive the code? {" "}
           <button
             type='button'
             className='text-primary-blue font-poppins font-medium hover:text-hover-blue transition-colors'

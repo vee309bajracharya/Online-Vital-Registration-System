@@ -23,7 +23,6 @@ const BirthCertificateForm = () => {
     dob_np: '',
     birth_place_en: '',
     birth_place_np: '',
-    delivery_type: '',
     grandfather_name_en: '',
     grandfather_name_np: '',
     parents: [
@@ -232,21 +231,6 @@ const BirthCertificateForm = () => {
                   {formik.touched.birth_place_np && formik.errors.birth_place_np && (
                     <p className="showError">{formik.errors.birth_place_np}</p>
                   )}
-
-                  <label className='certificateFormLabel'>Delivery Type</label>
-                  <select
-                    className="certificateFormInput"
-                    {...formik.getFieldProps('delivery_type')}
-                  >
-                    <option value="">Select Delivery Type</option>
-                    <option value="Normal">Normal</option>
-                    <option value="Cesarean">Cesarean</option>
-                    <option value="Assisted">Assisted</option>
-                  </select>
-                  {formik.touched.delivery_type && formik.errors.delivery_type && (
-                    <p className="showError">{formik.errors.delivery_type}</p>
-                  )}
-
                 </div>
               )}
 
@@ -475,9 +459,6 @@ const BirthCertificateForm = () => {
                   <input
                     type="text"
                     className="certificateFormInput" {...formik.getFieldProps('informant_name_en')} />
-                  {formik.touched.informant_name_en && formik.errors.informant_name_en && (
-                    <p className="showError">{formik.errors.informant_name_en}</p>
-                  )}
 
                   <label
                     className='certificateFormLabel'
@@ -485,9 +466,6 @@ const BirthCertificateForm = () => {
                   <input
                     type="text"
                     className="certificateFormInput" {...formik.getFieldProps('informant_name_np')} />
-                  {formik.touched.informant_name_np && formik.errors.informant_name_np && (
-                    <p className="showError">{formik.errors.informant_name_np}</p>
-                  )}
 
                   <label
                     className='certificateFormLabel'
@@ -495,9 +473,6 @@ const BirthCertificateForm = () => {
                   <input
                     type="text"
                     className="certificateFormInput" {...formik.getFieldProps('citizenship_number_en')} />
-                  {formik.touched.citizenship_number_en && formik.errors.citizenship_number_en && (
-                    <p className="showError">{formik.errors.citizenship_number_en}</p>
-                  )}
 
                   <label
                     className='certificateFormLabel'
@@ -505,9 +480,6 @@ const BirthCertificateForm = () => {
                   <input
                     type="text"
                     className="certificateFormInput" {...formik.getFieldProps('citizenship_number_np')} />
-                  {formik.touched.citizenship_number_np && formik.errors.citizenship_number_np && (
-                    <p className="showError">{formik.errors.citizenship_number_np}</p>
-                  )}
                 </div>
               )}
 

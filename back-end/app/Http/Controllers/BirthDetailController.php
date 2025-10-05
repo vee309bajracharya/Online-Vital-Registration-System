@@ -57,7 +57,6 @@ class BirthDetailController extends Controller
             // child birth details
             'birth_place_en' => 'required|string|max:255',
             'birth_place_np' => 'required|string',
-            'delivery_type' => 'required|string|nullable',
 
             // grandparent details
             'grandfather_name_en' => 'required|string|max:255',
@@ -105,7 +104,6 @@ class BirthDetailController extends Controller
                 'child_id' => $child->id,
                 'birth_place_en' => $validated['birth_place_en'],
                 'birth_place_np' => $validated['birth_place_np'],
-                'delivery_type' => $validated['delivery_type'],
             ]);
 
             // Grandfather details
@@ -149,6 +147,7 @@ class BirthDetailController extends Controller
                 'citizenship_number_np' => $validated['citizenship_number_np'],
                 'submitted_at' => now(),
                 'status' => 'PENDING', // Default status
+                'registration_type'=> 'birth',
             ]);
 
             DB::commit();
@@ -159,7 +158,7 @@ class BirthDetailController extends Controller
             return response()->json([
                 'message' => 'Birth details submitted successfully.',
                 'data' => $child,
-                'registration_id' => $registration->id,
+                'registration_number' => $registration->registration_number,
                 'status' => 'success'
             ], 201);
 
@@ -226,7 +225,6 @@ class BirthDetailController extends Controller
                 // child birth details
                 'birth_place_en' => 'required|string|max:255',
                 'birth_place_np' => 'required|string',
-                'delivery_type' => 'required|string',
 
                 // grandparent details
                 'grandfather_name_en' => 'required|string|max:255',
@@ -269,7 +267,6 @@ class BirthDetailController extends Controller
             $child->birth_details->update([
                 'birth_place_en' => $validated['birth_place_en'],
                 'birth_place_np' => $validated['birth_place_np'],
-                'delivery_type' => $validated['delivery_type'],
             ]);
             $child->grandfathers->update([
                 'grandfather_name_en' => $validated['grandfather_name_en'],

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminOfficerController;
 use App\Http\Controllers\BirthDetailController;
+use App\Http\Controllers\OfficerCertificateController;
 use App\Http\Controllers\PhoneVerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/officers', [AdminOfficerController::class, 'store']);
         Route::put('/officers/{id}', [AdminOfficerController::class, 'update']);
         Route::delete('/officers/{id}', [AdminOfficerController::class, 'destroy']);
+    });
+
+    //certificates mgmt routes for officer
+    Route::middleware('role:OFFICER')->group(function(){
+        Route::get('/officer/certificates/pending', [OfficerCertificateController::class, 'getPendingCertificates']);
     });
 
 

@@ -10,7 +10,6 @@ class BirthDetail extends Model
         'child_id',
         'birth_place_en',
         'birth_place_np',
-        'delivery_type',
     ];
 
     public function child(){
