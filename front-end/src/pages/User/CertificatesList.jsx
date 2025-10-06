@@ -55,7 +55,7 @@ const CertificatesList = ({ className }) => {
     const statusStyles = {
       PENDING: "bg-pending text-yellow-800",
       APPROVED: "bg-success text-green-800",
-      REJECTED: "bg-decline text-red-800",
+      REJECTED: "bg-decline text-white",
     };
     return (
       <span className={`px-3 py-1 rounded-md text-sm font-semibold font-poppins ${statusStyles[status]}`}>

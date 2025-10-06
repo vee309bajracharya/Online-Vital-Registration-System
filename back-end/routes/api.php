@@ -57,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //certificates mgmt routes for officer
     Route::middleware('role:OFFICER')->group(function(){
         Route::get('/officer/certificates/pending', [OfficerCertificateController::class, 'getPendingCertificates']);
+        Route::post('/officer/certificates/approve/{id}', [OfficerCertificateController::class, 'approveCertificate']);
+        Route::post('/officer/certificates/reject/{id}', [OfficerCertificateController::class, 'rejectCertificate']);
+        Route::get('/officer/statistics', [OfficerCertificateController::class, 'getOfficerStatistics']);
     });
 
 

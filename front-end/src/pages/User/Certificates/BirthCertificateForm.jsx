@@ -508,7 +508,7 @@ const BirthCertificateForm = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="flex-1 px-6 py-3 bg-success text-light rounded-md hover:bg-green-600 disabled:opacity-50 cursor-pointer"
+                    className="flex-1 px-6 py-3 bg-success text-dark rounded-md hover:bg-green-600 hover:text-light disabled:opacity-50 cursor-pointer"
                   >
                     {isLoading ? <Loader className="animate-spin mx-auto" size={20} /> : 'Submit Registration'}
                   </button>

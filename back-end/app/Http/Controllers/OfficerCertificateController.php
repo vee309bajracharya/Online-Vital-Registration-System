@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Child;
+use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -66,7 +67,7 @@ class OfficerCertificateController extends Controller
 
             if($registration->status !== 'PENDING'){
                 return response()->json([
-                    'error'=> 'Certificate already processed'
+                    'error'=> 'Certificate already approved'
                 ],400);
             }
 
@@ -89,5 +90,89 @@ class OfficerCertificateController extends Controller
         }
     }
 
-            
+    //reject a certificate
+    public function rejectCertificate(Request $request, $id){
+        $request->validate([
+            'rejection_reason' => 'required|string|max:100'
+        ]);
+
+        $user = $request->user();
+        $officerProfile = $user->officerProfile;
+
+        try {
+            $child = Child::with(['registrations','address'])->findOrFail($id);
+            $registration = $child->registrations;
+
+            // verify officer
+            if($child->address->ward_number != $officerProfile->ward_number){
+                return response()->json([
+                    'error'=> 'Not authorized for this certificate'
+                ],403);
+            }
+
+            if($registration->status !== 'PENDING'){
+                return response()->json([
+                    'error'=> 'Certificate already rejected'
+                ],400);
+            }
+
+            $registration->update([
+                'status'=> 'REJECTED',
+                'rejection_reason' => $request->rejection_reason,
+                'rejected_by'=> $user->id,
+                'rejected_at'=> now(),
+            ]);
+
+            return response()->json([
+                'message'=> 'Certificate rejected',
+                'data'=> $child->load(['registrations'])
+            ],200);
+
+
+        } catch (\Exception $e) {
+            Log::error('Error rejecting certificate: '. $e->getMessage());
+            return response()->json([
+                'error'=> 'Failed to reject certificate'
+            ],500);
+        }
+    }
+
+    //officer statistics
+    public function getOfficerStatistics(Request $request){
+        $user = $request->user();
+        $officerProfile = $user->officerProfile;
+
+        try {
+            $stats = [
+                'pending'=> Registration::query()
+                    ->where('status','PENDING')
+                    ->whereHas('child.address', function($query) use ($officerProfile){
+                    $query->where('ward_number', $officerProfile->ward_number);
+                })->count(),
+
+                'approved'=> Registration::query()
+                        ->where('status', 'APPROVED')
+                        ->where('approved_by', $user->id)
+                        ->count(),
+                
+                'rejected'=> Registration::query()
+                        ->where('status', 'REJECTED')
+                        ->where('rejected_by', $user->id)
+                        ->count(),
+            ];
+
+            return response()->json([
+                'message'=> 'Statistics retrieved successfully',
+                'data'=> $stats
+            ],200);
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch statistics' . $e->getMessage());
+            return response()->json([
+                'error'=> 'Failed to fetch statistics'
+            ],500);
+
+        }
+    }
+
+
 }
