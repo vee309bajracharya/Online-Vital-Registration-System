@@ -174,5 +174,34 @@ class OfficerCertificateController extends Controller
         }
     }
 
+    //certificates list
+    public function getAllCertificates(Request $request){
+        $user = $request->user();
+        $officerProfile = $user->officerProfile;
+
+        try {
+            $certificates = Child::whereHas('address', function($query) use ($officerProfile){
+                $query->where('ward_number', $officerProfile->ward_number);
+            })
+            ->with(['parent_details', 'birth_details', 'address', 'registrations', 'grandfathers'])
+            ->get();
+
+            return response()->json([
+                'message'=> 'Certificates retrived successfully',
+                'data'=> $certificates,
+                'officer_info'=>[
+                        'function'=> $officerProfile->function,
+                        'municipality'=> $officerProfile->municipality->name,
+                        'ward'=> $officerProfile->ward_number,
+                ]
+                ],200);
+        } catch (\Exception $e) {
+            Log::error('Error fetching certificates : '. $e->getMessage());
+            return response()->json([
+                'error'=> 'Failed to fetch certificates'
+            ],500);
+        }
+    }
+
 
 }

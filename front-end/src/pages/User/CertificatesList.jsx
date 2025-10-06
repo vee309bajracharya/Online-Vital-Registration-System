@@ -321,7 +321,7 @@ const CertificatesList = ({ className }) => {
                 </section>
 
                 <div>
-                  <p className="text-md font-semibold my-2 text-right">कार्यालयको छाप/ Offical Stamp</p>
+                  <p className="text-md font-semibold my-2 text-right">कार्यालयको छाप/ Official Stamp</p>
                   <p className="text-right font-semibold">{selectedCertificate.address.municipality_np}, {selectedCertificate.address.district_np} जिल्ला</p>
                 </div>
 
