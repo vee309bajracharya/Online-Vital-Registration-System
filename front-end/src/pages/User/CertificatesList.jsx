@@ -55,7 +55,7 @@ const CertificatesList = ({ className }) => {
     const statusStyles = {
       PENDING: "bg-pending text-yellow-800",
       APPROVED: "bg-success text-green-800",
-      REJECTED: "bg-decline text-red-800",
+      REJECTED: "bg-decline text-white",
     };
     return (
       <span className={`px-3 py-1 rounded-md text-sm font-semibold font-poppins ${statusStyles[status]}`}>
@@ -321,7 +321,7 @@ const CertificatesList = ({ className }) => {
                 </section>
 
                 <div>
-                  <p className="text-md font-semibold my-2 text-right">कार्यालयको छाप/ Offical Stamp</p>
+                  <p className="text-md font-semibold my-2 text-right">कार्यालयको छाप/ Official Stamp</p>
                   <p className="text-right font-semibold">{selectedCertificate.address.municipality_np}, {selectedCertificate.address.district_np} जिल्ला</p>
                 </div>
 

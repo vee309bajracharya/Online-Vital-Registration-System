@@ -46,17 +46,21 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // officer mgmt (used by Admin only)
-    Route::middleware('role:ADMIN')->group(function () {
-        Route::get('/all-officers', [AdminOfficerController::class, 'index']);
-        Route::get('/officer/{id}', [AdminOfficerController::class, 'show']);
-        Route::post('/officers', [AdminOfficerController::class, 'store']);
-        Route::put('/officers/{id}', [AdminOfficerController::class, 'update']);
-        Route::delete('/officers/{id}', [AdminOfficerController::class, 'destroy']);
-    });
+    // Route::middleware('role:ADMIN')->group(function () {
+    //     Route::get('/all-officers', [AdminOfficerController::class, 'index']);
+    //     Route::get('/officer/{id}', [AdminOfficerController::class, 'show']);
+    //     Route::post('/officers', [AdminOfficerController::class, 'store']);
+    //     Route::put('/officers/{id}', [AdminOfficerController::class, 'update']);
+    //     Route::delete('/officers/{id}', [AdminOfficerController::class, 'destroy']);
+    // });
 
     //certificates mgmt routes for officer
     Route::middleware('role:OFFICER')->group(function(){
         Route::get('/officer/certificates/pending', [OfficerCertificateController::class, 'getPendingCertificates']);
+        Route::post('/officer/certificates/approve/{id}', [OfficerCertificateController::class, 'approveCertificate']);
+        Route::post('/officer/certificates/reject/{id}', [OfficerCertificateController::class, 'rejectCertificate']);
+        Route::get('/officer/statistics', [OfficerCertificateController::class, 'getOfficerStatistics']);
+        Route::get('/officer/certificates/all-certificates', [OfficerCertificateController::class, 'getAllCertificates']);
     });
 
 
