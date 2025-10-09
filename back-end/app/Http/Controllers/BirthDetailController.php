@@ -204,12 +204,13 @@ class BirthDetailController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Only allow updates for PENDING registrations
+        // Only allow updates for PENDING and REJECTED registrations
         try {
             $userId = auth()->user()->id;
 
             $child = Child::whereHas('registrations', function ($query) use ($userId) {
-                $query->where('user_id', $userId)->where('status', 'PENDING');
+                $query->where('user_id', $userId)
+                      ->whereIn('status', ['PENDING', 'REJECTED']);
             })->with(['parent_details', 'birth_details', 'address', 'registrations', 'grandfathers'])
               ->findOrFail($id);
 
@@ -300,6 +301,8 @@ class BirthDetailController extends Controller
                 'informant_name_np' => $validated['informant_name_np'],
                 'citizenship_number_en' => $validated['citizenship_number_en'],
                 'citizenship_number_np' => $validated['citizenship_number_np'],
+                'status'=>'PENDING', //after edit, set back to PENDING
+                'rejection_reason'=> 'null', //clear the rejection reason
             ]);
 
             DB::commit();

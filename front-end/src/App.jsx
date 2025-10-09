@@ -16,6 +16,7 @@ import DeathCertificateForm from './pages/User/Certificates/DeathCertificateForm
 import MigrationCertificateForm from './pages/User/Certificates/MigrationCertificateForm';
 import axiosClient from './api/axiosClient';
 import Spinner from './components/loaders/Spinner';
+import EditBirthCertificateForm from './pages/User/Certificates/updateCertificatesList/EditBirthCertificateForm';
 
 
 const App = () => {
@@ -99,6 +100,14 @@ const App = () => {
           path="/migration-certificate/new" 
           element={token && user?.phone_verified_at 
           ? <MigrationCertificateForm /> : <Navigate to="/dashboard" />} />
+
+        {/* edit certificate routes */}
+        <Route
+          path='/birth-certificate/edit/:id'
+          element={
+            token && user?.phone_verified_at
+            ? <EditBirthCertificateForm/> : <Navigate to="/dashboard"/>
+          }/>
 
         {/* unknown route */}
         <Route path='*' element={<PageNotFound />} />
