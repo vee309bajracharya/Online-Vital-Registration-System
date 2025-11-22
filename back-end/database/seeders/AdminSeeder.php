@@ -15,10 +15,10 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'ADMIN_EMAIL'], // unique field to avoid duplicates
+            ['email' => env('ADMIN_EMAIL')], // unique field to avoid duplicates
             [
                 'name' => 'Admin',
-                'email' => 'ADMIN_EMAIL',
+                'email' => env('ADMIN_EMAIL'),
                 'password' => Hash::make(env('ADMIN_PASSWORD')),
                 'role' => 'ADMIN',
             ]

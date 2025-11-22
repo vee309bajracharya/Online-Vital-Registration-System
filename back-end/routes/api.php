@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // officer mgmt (used by Admin only)
-    // Route::middleware('role:ADMIN')->group(function () {
+    // Route::middleware('role:ADMIN')->grou p(function () {
     //     Route::get('/all-officers', [AdminOfficerController::class, 'index']);
     //     Route::get('/officer/{id}', [AdminOfficerController::class, 'show']);
     //     Route::post('/officers', [AdminOfficerController::class, 'store']);
