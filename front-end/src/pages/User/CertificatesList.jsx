@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import axiosClient from "../../api/axiosClient"
-import { Loader, X } from "lucide-react"
+import { FileEdit, Loader, X, Eye } from "lucide-react"
 import mainLogo from '../../assets/svg/logo.svg'
+import { useNavigate } from 'react-router-dom'
 
 const CertificatesList = ({ className }) => {
   const [certificates, setCertificates] = useState([]);
@@ -9,6 +10,7 @@ const CertificatesList = ({ className }) => {
   const [selectedCertificate, setSelectedCertificate] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [activeType, setActiveType] = useState("birth");
+  const navigate = useNavigate();
 
   // Fetch certificates whenever filter type changes
   useEffect(() => {
@@ -38,9 +40,9 @@ const CertificatesList = ({ className }) => {
   const handleView = async (certificateId) => {
     try {
       const endpointMap = {
-        birth: `/birth-certificates/${certificateId}`,
-        death: `/death-certificates/${certificateId}`,
-        migration: `/migration-certificates/${certificateId}`,
+        birth: `/birth-certificate/${certificateId}`,
+        death: `/death-certificate/${certificateId}`,
+        migration: `/migration-certificate/${certificateId}`,
       };
       const response = await axiosClient.get(endpointMap[activeType]);
       setSelectedCertificate(response.data.data);
@@ -49,6 +51,11 @@ const CertificatesList = ({ className }) => {
       console.log("Failed to fetch certificate details", error);
     }
   };
+
+  //edit the certificate
+  const handleEdit = (certificateId) => {
+    navigate(`/birth-certificate/edit/${certificateId}`)
+  }
 
   // Status Badge
   const getStatusBadge = (status) => {
@@ -63,6 +70,11 @@ const CertificatesList = ({ className }) => {
       </span>
     );
   };
+
+  // check if certifciate can be edited
+  const canEdit = (status) => {
+    return status === 'PENDING' || status === 'REJECTED'
+  }
 
   if (loading) {
     return (
@@ -101,7 +113,7 @@ const CertificatesList = ({ className }) => {
             <p className="font-poppins text-gray-500">No {activeType} certificates registered yet</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {certificates.map((cert) => (
               <div
                 key={cert.id}
@@ -116,7 +128,8 @@ const CertificatesList = ({ className }) => {
                 </div>
 
                 <div className="bg-mid-dark p-4">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center flex-col">
+
                     <div className="flex-1 space-y-2">
                       <p className="text-xs text-light font-semibold font-poppins">
                         Registration No.: {cert.registrations.registration_number}
@@ -125,7 +138,33 @@ const CertificatesList = ({ className }) => {
                         Registration for: {cert.full_name_en || cert.deceased_name_en || cert.migrator_name_en}
                       </p>
                     </div>
-                    <div>{getStatusBadge(cert.registrations.status)}</div>
+
+                      <div className="my-4">
+                        {getStatusBadge(cert.registrations.status)}
+                      </div>
+                    <div className='flex items-center gap-3'>
+
+                      {/* Edit button - only for PENDING/REJECTED */}
+                      {canEdit(cert.registrations.status) && (
+                        <button
+                          onClick={() => handleEdit(cert.id)}
+                          className='flex items-center gap-2 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold font-poppins hover:bg-orange-600 transition-colors cursor-pointer'
+                          title="Edit Certificate"
+                        >
+                          <FileEdit size={16} /> Edit
+                        </button>
+                      )}
+
+                      {/* View button */}
+                      <button
+                        onClick={() => handleView(cert.id)}
+                        className='flex items-center gap-2 bg-primary-blue text-light px-3 py-1 rounded-full text-sm font-semibold font-poppins hover:bg-blue-600 transition-colors cursor-pointer'
+                      >
+                        <Eye size={18} /> View
+                      </button>
+                    </div>
+
+
                   </div>
                 </div>
               </div>

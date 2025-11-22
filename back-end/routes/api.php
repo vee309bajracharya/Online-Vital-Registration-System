@@ -40,13 +40,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['role:USER','phone.verified'])->group(function () {
         Route::post('/birth-certificate/new', [BirthDetailController::class, 'store']);
         Route::get('/birth-certificates', [BirthDetailController::class, 'index']);
-        Route::get('/birth-certificates/{id}', [BirthDetailController::class, 'show']);
-        Route::put('/birth-certificates/{id}', [BirthDetailController::class, 'update']);
-        Route::delete('/birth-certificates/{id}', [BirthDetailController::class, 'destroy']);
+        Route::get('/birth-certificate/{id}', [BirthDetailController::class, 'show']);
+        Route::put('/birth-certificate/edit/{id}', [BirthDetailController::class, 'update']);
+        Route::delete('/birth-certificate/delete/{id}', [BirthDetailController::class, 'destroy']);
     });
 
     // officer mgmt (used by Admin only)
-    // Route::middleware('role:ADMIN')->group(function () {
+    // Route::middleware('role:ADMIN')->grou p(function () {
     //     Route::get('/all-officers', [AdminOfficerController::class, 'index']);
     //     Route::get('/officer/{id}', [AdminOfficerController::class, 'show']);
     //     Route::post('/officers', [AdminOfficerController::class, 'store']);
